@@ -39,7 +39,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${DIR_LOGS:-./logs}/traefik:/var/log/traefik
     environment:
-      - TZ=UTC # Zona horaria
+      - TZ=${TZ:-UTC}
     networks:
       - traefik
     labels:

@@ -31,11 +31,13 @@ Configuración de Traefik 3.5 con Docker Compose siguiendo buenas prácticas, m�
 	```
 4. Accede al dashboard en: [http://localhost:8080](http://localhost:8080)
 
+
 ## Variables de entorno
 - `HTTP_PORT`: Puerto HTTP (default: 80)
 - `HTTPS_PORT`: Puerto HTTPS (default: 443)
 - `DASHBOARD_PORT`: Puerto dashboard (default: 8080)
 - `DIR_LOGS`: Carpeta para logs (default: ./logs)
+- `TZ`: Zona horaria del contenedor (ejemplo: America/La_Paz)
 
 
 ## Métricas y monitoreo
