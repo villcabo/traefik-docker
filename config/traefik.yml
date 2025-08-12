@@ -1,0 +1,34 @@
+# Configuración estática de Traefik 3.5
+
+api:
+  insecure: true
+
+providers:
+  docker:
+    exposedByDefault: false
+
+entryPoints:
+  web:
+    address: ":80"
+
+log:
+  level: INFO
+
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  bufferingSize: 100
+
+metrics:
+  prometheus:
+    entryPoint: web
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+    addEntryPointsLabels: true
+    addServicesLabels: true
+    addRoutersLabels: true
+
+# Para exponer métricas en /metrics (ruta por defecto)
+# Si quieres una ruta personalizada, usa un archivo dinámico aparte.
