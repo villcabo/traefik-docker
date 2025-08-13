@@ -13,6 +13,7 @@ Configuración de Traefik 3.5 con Docker Compose siguiendo buenas prácticas, m�
 ## Estructura de archivos
 - `docker-compose.yml`: Orquestación principal de servicios
 - `traefik/traefik.yml`: Configuración estática de Traefik (opcional, puedes usar solo flags)
+- `services/`: Definición de servicios redundantes
 - `.env.example`: Variables de entorno de ejemplo
 - `logs/`: Carpeta sugerida para logs de Traefik
 
@@ -32,15 +33,23 @@ Configuración de Traefik 3.5 con Docker Compose siguiendo buenas prácticas, m�
 4. Accede al dashboard en: [http://localhost:8080](http://localhost:8080)
 
 
-## Variables de entorno
- `HTTP_PORT`: Puerto HTTP (default: 80)
- `HTTPS_PORT`: Puerto HTTPS (default: 443)
- `DASHBOARD_PORT`: Puerto dashboard (default: 8080)
- `DIR_LOGS`: Carpeta para logs (default: ./logs)
- `TZ`: Zona horaria del contenedor (ejemplo: America/La_Paz)
- `NETWORK_MODE`: Modo de red del contenedor Traefik. Por defecto es `bridge`. Puedes cambiarlo a `host` si necesitas exponer los puertos directamente en el host:
-	 - Ejemplo: `NETWORK_MODE=host`
-	 - Si usas `host`, la red traefik definida en el compose no se usará para ese servicio.
+## Modo de red: bridge vs host
+
+Docker Compose no permite usar `network_mode` y `networks` juntos en el mismo servicio. Por eso, si necesitas levantar Traefik en modo `host`, debes usar un archivo compose específico:
+
+- Para modo host (por defecto):
+	```sh
+	docker compose up -d
+	```
+
+- Para modo bridge (exponer puertos directamente en el host):
+	```sh
+	docker compose -f bridge-compose.host.yml up -d
+	```
+
+En `docker-compose.yml` solo se define `network_mode: host` y se omiten los bloques `ports` y `networks` para el servicio Traefik.
+
+No es posible parametrizar esto solo con variables de entorno en un único archivo Compose. Elige el archivo adecuado según tu necesidad.
 
 ## Métricas y monitoreo
 - Las métricas Prometheus están expuestas en la ruta `/prometheus/metrics` sobre el mismo puerto HTTP de Traefik (por defecto `:80`).
