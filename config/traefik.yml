@@ -9,7 +9,11 @@ providers:
 
 entryPoints:
   web:
-    address: ":80"
+    address: ":${HTTP_PORT:-80}"
+  websecure:
+    address: ":${HTTPS_PORT:-443}"
+  dashboard:
+    address: ":${DASHBOARD_PORT:-8080}"
 
 log:
   level: INFO
@@ -29,6 +33,3 @@ metrics:
     addEntryPointsLabels: true
     addServicesLabels: true
     addRoutersLabels: true
-
-# Para exponer métricas en /metrics (ruta por defecto)
-# Si quieres una ruta personalizada, usa un archivo dinámico aparte.

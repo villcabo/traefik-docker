@@ -18,6 +18,7 @@ services:
       - ${DIR_LOGS:-./logs}/traefik:/var/log/traefik
     environment:
       - TZ=${TZ:-UTC}
+    network_mode: ${NETWORK_MODE:-bridge}
     networks:
       - traefik
     labels:
