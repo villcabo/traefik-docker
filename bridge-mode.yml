@@ -1,0 +1,19 @@
+# Docker Compose para Traefik 3.5 con buenas prácticas y monitoreo
+# Author: Bismarck Villca <bismarck.villca@gmail.com>
+name: traefik
+
+networks:
+  traefik:
+    driver: bridge
+
+services:
+  traefik:
+    networks:
+      - traefik
+    ports:
+      - "${HTTP_PORT:-80}:80"           # HTTP (ignorado si NETWORK_MODE=host)
+      - "${HTTPS_PORT:-443}:443"        # HTTPS (ignorado si NETWORK_MODE=host)
+      - "${DASHBOARD_PORT:-8080}:8080"  # Dashboard (ignorado si NETWORK_MODE=host)
+    extends:
+      service: traefik
+      file: services/traefik.yml
