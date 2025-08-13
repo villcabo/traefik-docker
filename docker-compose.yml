@@ -1,6 +1,6 @@
 # Docker Compose para Traefik 3.5 con buenas prácticas y monitoreo
 # Author: Bismarck Villca <bismarck.villca@gmail.com>
-name: traefik
+name: traefik_stack
 
 networks:
   traefik:
