@@ -10,10 +10,6 @@ providers:
 entryPoints:
   web:
     address: ":80"
-  websecure:
-    address: ":443"
-  dashboard:
-    address: ":8080"
 
 log:
   level: INFO
