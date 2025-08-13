@@ -25,8 +25,8 @@ services:
       - "${DASHBOARD_PORT:-8080}:8080"  # Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ../config/traefik.yml:/traefik.yml:ro
-      - ${DIR_LOGS:-../logs}/traefik:/var/log/traefik
+      - ./config/traefik.yml:/traefik.yml:ro
+      - ${DIR_LOGS:-./logs}/traefik:/var/log/traefik
     environment:
       - TZ=${TZ:-UTC}
     labels:
