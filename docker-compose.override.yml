@@ -1,0 +1,6 @@
+# Override para network_mode: host
+services:
+  traefik:
+    network_mode: host
+    ports: [] # No se deben mapear puertos en modo host
+    networks: [] # No se deben usar redes en modo host
