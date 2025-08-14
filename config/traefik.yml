@@ -12,7 +12,7 @@ providers:
     exposedByDefault: false
   # Proveedor de archivos para configuración dinámica
   file:
-    filename: /dynamic.yml
+    filename: /etc/traefik/dynamic.yml
     watch: true # Habilita recargas automáticas en caliente
 
 entryPoints:
