@@ -40,5 +40,25 @@ Configuración de Traefik 3.5 con Docker Compose siguiendo buenas prácticas, m�
 - El dashboard está habilitado solo en la red interna y requiere configuración adicional para exponerlo de forma segura en producción.
 - Revisa y ajusta los entrypoints, reglas y certificados según tus necesidades.
 
+## Como habilitar en el contenedor externo
+
+Agrega las siguientes etiquetas en el contenedor que deseas exponer a través de Traefik, ajustando los valores según corresponda:
+
+```properties
+labels:
+  - "traefik.enable=true"
+  - "traefik.http.routers.yourms.rule=PathPrefix(`/yourms`)"
+  - "traefik.http.routers.yourms.entrypoints=web"
+  - "traefik.http.middlewares.yourms-stripprefix.stripprefix.prefixes=/yourms"
+  - "traefik.http.routers.yourms.middlewares=yourms-stripprefix,retry@file"
+  - "traefik.http.services.yourms.loadbalancer.server.port=8012"
+  - "traefik.http.services.yourms.loadbalancer.healthcheck.path=/management/health"
+  - "traefik.http.services.yourms.loadbalancer.healthcheck.interval=5s"
+  - "traefik.http.services.yourms.loadbalancer.healthcheck.timeout=2s"
+```
+
+Nota: Cambia `yourms` por el nombre de tu servicio y ajusta el puerto y la ruta de healthcheck según tu configuración.
+Utiliza `retry@file` para habilitar reintentos en caso de fallos.
+
 ## Autor
 Bismarck Villca <bismarck.villca@gmail.com>
