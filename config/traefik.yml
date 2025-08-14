@@ -22,14 +22,6 @@ entryPoints:
   # websecure:
   #   address: ":443"
 
-http:
-  middlewares:
-    # Middleware de reintento para mejorar la resiliencia
-    retry:
-      retry:
-        attempts: 3
-        initialInterval: "500ms"
-
 accessLog:
   filePath: "/var/log/traefik/access.log"
   bufferingSize: 100
