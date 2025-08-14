@@ -1,0 +1,3 @@
+# Configuración dinámica de Traefik
+# Este archivo permite configuraciones que se recargan automáticamente sin reiniciar Traefik
+# Author: Bismarck Villca <bismarck.villca@gmail.com>

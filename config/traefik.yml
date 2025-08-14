@@ -1,18 +1,26 @@
 # Configuración estática de Traefik 3.5
 
+log:
+  level: INFO # ERROR, DEBUG, PANIC, FATAL, ERROR, WARN, INFO
+
 api:
   insecure: true
+  dashboard: true
 
 providers:
   docker:
     exposedByDefault: false
+  # Proveedor de archivos para configuración dinámica
+  file:
+    filename: /dynamic.yml
+    watch: true # Habilita recargas automáticas en caliente
 
 entryPoints:
   web:
     address: ":80"
-
-log:
-  level: INFO
+  # Descomentar para habilitar HTTPS
+  # websecure:
+  #   address: ":443"
 
 accessLog:
   filePath: "/var/log/traefik/access.log"
@@ -21,11 +29,6 @@ accessLog:
 metrics:
   prometheus:
     entryPoint: web
-    buckets:
-      - 0.1
-      - 0.3
-      - 1.2
-      - 5.0
     addEntryPointsLabels: true
     addServicesLabels: true
     addRoutersLabels: true

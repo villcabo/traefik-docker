@@ -1,0 +1,198 @@
+# Configuración dinámica de Traefik
+# Este archivo permite configuraciones que se recargan automáticamente sin reiniciar Traefik
+# Author: Bismarck Villca <bismarck.villca@gmail.com>
+
+# Configuración HTTP
+http:
+  # Routers - Definen las reglas de enrutamiento
+  routers:
+    # Ejemplo: Router para una aplicación web
+    webapp-router:
+      rule: "Host(`webapp.localhost`)"
+      service: webapp-service
+      entryPoints:
+        - web
+      # Middlewares aplicados a este router
+      middlewares:
+        - default-headers
+        - rate-limit
+
+    # Ejemplo: Router para API con autenticación
+    api-router:
+      rule: "Host(`api.localhost`) && PathPrefix(`/api`)"
+      service: api-service
+      entryPoints:
+        - web
+      middlewares:
+        - auth
+        - api-headers
+        - cors
+
+    # Ejemplo: Router para sitio estático
+    static-router:
+      rule: "Host(`static.localhost`)"
+      service: static-service
+      entryPoints:
+        - web
+      middlewares:
+        - compress
+
+  # Services - Definen los backends
+  services:
+    # Ejemplo: Servicio web con load balancing
+    webapp-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.100:3000"
+          - url: "http://192.168.1.101:3000"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "5s"
+
+    # Ejemplo: Servicio API
+    api-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.102:8000"
+        healthCheck:
+          path: "/api/health"
+          interval: "10s"
+
+    # Ejemplo: Servicio estático
+    static-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.103:80"
+
+  # Middlewares - Funcionalidades intermedias
+  middlewares:
+    # Headers por defecto
+    default-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "http"
+        customResponseHeaders:
+          X-Frame-Options: "DENY"
+          X-Content-Type-Options: "nosniff"
+          X-XSS-Protection: "1; mode=block"
+
+    # Headers específicos para API
+    api-headers:
+      headers:
+        customResponseHeaders:
+          X-API-Version: "v1.0"
+          Cache-Control: "no-cache, no-store, must-revalidate"
+
+    # CORS para API
+    cors:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowOriginList:
+          - "http://localhost:3000"
+          - "http://webapp.localhost"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-Requested-With"
+        accessControlAllowCredentials: true
+
+    # Rate limiting
+    rate-limit:
+      rateLimit:
+        average: 100  # requests per second
+        burst: 200    # burst requests
+        period: "1s"
+
+    # Autenticación básica
+    auth:
+      basicAuth:
+        users:
+          # admin:password (bcrypt hash)
+          - "admin:$2y$10$2b2cu.../hash/example"
+
+    # Compresión
+    compress:
+      compress: {}
+
+    # Redirect HTTP to HTTPS (para cuando tengas HTTPS configurado)
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+    # IP Whitelist (ejemplo)
+    ip-whitelist:
+      ipWhiteList:
+        sourceRange:
+          - "192.168.1.0/24"
+          - "10.0.0.0/8"
+
+    # Retry middleware
+    retry:
+      retry:
+        attempts: 3
+
+    # Circuit breaker
+    circuit-breaker:
+      circuitBreaker:
+        expression: "NetworkErrorRatio() > 0.30"
+
+# Configuración TCP (ejemplo para bases de datos)
+tcp:
+  routers:
+    # Ejemplo: Router para PostgreSQL
+    postgres-router:
+      rule: "HostSNI(`*`)"
+      service: postgres-service
+      entryPoints:
+        - postgres
+
+    # Ejemplo: Router para Redis
+    redis-router:
+      rule: "HostSNI(`*`)"
+      service: redis-service
+      entryPoints:
+        - redis
+
+  services:
+    # Servicio PostgreSQL
+    postgres-service:
+      loadBalancer:
+        servers:
+          - address: "192.168.1.110:5432"
+
+    # Servicio Redis
+    redis-service:
+      loadBalancer:
+        servers:
+          - address: "192.168.1.111:6379"
+
+# TLS Configuration (ejemplo)
+tls:
+  # Certificados estáticos
+  certificates:
+    - certFile: "/etc/traefik/certs/example.crt"
+      keyFile: "/etc/traefik/certs/example.key"
+      stores:
+        - default
+
+  # Configuraciones TLS
+  options:
+    default:
+      minVersion: "VersionTLS12"
+      cipherSuites:
+        - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        - "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+        - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/etc/traefik/certs/default.crt"
+        keyFile: "/etc/traefik/certs/default.key"
