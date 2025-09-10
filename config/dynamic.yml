@@ -1,10 +1,10 @@
-# Configuración dinámica de Traefik
-# Este archivo permite configuraciones que se recargan automáticamente sin reiniciar Traefik
+# Traefik dynamic configuration
+# This file enables configurations that reload automatically without restarting Traefik
 # Author: Bismarck Villca <bismarck.villca@gmail.com>
 
 http:
   middlewares:
-    # Middleware de reintento para mejorar la resiliencia
+    # Retry middleware to improve resilience
     retry:
       retry:
         attempts: 3

@@ -1,4 +1,4 @@
-# Configuración estática de Traefik 3.5
+# Traefik 3.5 static configuration
 
 log:
   level: INFO # ERROR, DEBUG, PANIC, FATAL, ERROR, WARN, INFO
@@ -11,15 +11,15 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-  # Proveedor de archivos para configuración dinámica
+  # File provider for dynamic configuration
   file:
     filename: /etc/traefik/dynamic.yml
-    watch: true # Habilita recargas automáticas en caliente
+    watch: true # Enable hot reloads
 
 entryPoints:
   web:
     address: ":80"
-  # Descomentar para habilitar HTTPS
+  # Uncomment to enable HTTPS
   # websecure:
   #   address: ":443"
 

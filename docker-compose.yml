@@ -1,4 +1,4 @@
-# Docker Compose para Traefik 3.5 con buenas prácticas y monitoreo
+# Docker Compose for Traefik 3.5 with best practices and monitoring
 # Author: Bismarck Villca <bismarck.villca@gmail.com>
 name: traefik_stack
 
@@ -15,7 +15,7 @@ services:
     image: traefik:3.5
     container_name: traefik
     restart: unless-stopped
-    # command: [] # Toda la configuración está en config/traefik.yml
+    # command: [] # All configuration is in config/traefik.yml
     networks:
       - traefik
       - traefik_router

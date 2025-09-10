@@ -1,48 +1,48 @@
 # Traefik Docker Stack
 
-Configuración de Traefik 3.5 con Docker Compose siguiendo buenas prácticas, métricas Prometheus, logs y dashboard seguro.
+Traefik 3.5 configuration with Docker Compose following best practices, Prometheus metrics, logs, and a secure dashboard.
 
-## Características principales
-- **Traefik 3.5** como reverse proxy y balanceador de carga
-- Dashboard web de administración
-- Logs de acceso configurables
-- Métricas Prometheus listas para monitoreo
-- Integración con Docker (autodiscovery de servicios)
-- Variables de entorno para puertos y rutas
+## Main features
+- **Traefik 3.5** as a reverse proxy and load balancer
+- Web admin dashboard
+- Configurable access logs
+- Prometheus metrics ready for monitoring
+- Docker integration (service autodiscovery)
+- Environment variables for ports and routes
 
-## Estructura de archivos
-- `docker-compose.yml`: Orquestación principal de servicios
-- `config/traefik.yml`: Configuración estática de Traefik (opcional, puedes usar solo flags)
-- `.env.example`: Variables de entorno de ejemplo
-- `logs/`: Carpeta sugerida para logs de Traefik
+## File structure
+- `docker-compose.yml`: Main service orchestration
+- `config/traefik.yml`: Traefik static configuration (optional, you can use only flags)
+- `.env.example`: Example environment variables
+- `logs/`: Suggested folder for Traefik logs
 
-## Uso rápido
-1. Copia `.env.example` a `.env` y ajusta los valores si lo deseas:
+## Quick start
+1. Copy `.env.example` to `.env` and adjust values if desired:
 	```sh
 	cp .env.example .env
 	```
-2. (Opcional) Crea la carpeta de logs:
+2. (Optional) Create the logs folder:
 	```sh
 	mkdir -p logs/traefik
 	```
-3. Levanta el stack:
+3. Bring the stack up:
 	```sh
 	docker compose up -d
 	```
-4. Accede al dashboard en: [http://localhost:8080](http://localhost:8080)
+4. Access the dashboard at: [http://localhost:8080](http://localhost:8080)
 
-## Métricas y monitoreo
-- Las métricas Prometheus están expuestas en la ruta `/prometheus/metrics` sobre el mismo puerto HTTP de Traefik (por defecto `:80`).
-- Puedes configurar Prometheus para recolectar métricas desde `http://localhost/prometheus/metrics`.
-- Esto evita abrir un puerto adicional y permite proteger la ruta con middlewares si lo deseas.
+## Metrics and monitoring
+- Prometheus metrics are exposed at the `/prometheus/metrics` path on the same Traefik HTTP port (by default `:80`).
+- You can configure Prometheus to scrape from `http://localhost/prometheus/metrics`.
+- This avoids opening an additional port and allows protecting the path with middlewares if desired.
 
-## Seguridad
-- El dashboard está habilitado solo en la red interna y requiere configuración adicional para exponerlo de forma segura en producción.
-- Revisa y ajusta los entrypoints, reglas y certificados según tus necesidades.
+## Security
+- The dashboard is enabled only on the internal network and requires additional configuration to expose it safely in production.
+- Review and adjust entrypoints, rules, and certificates as needed.
 
-## Como habilitar en el contenedor externo
+## How to enable on the external container
 
-Agrega las siguientes etiquetas en el contenedor que deseas exponer a través de Traefik, ajustando los valores según corresponda:
+Add the following labels to the container you want to expose through Traefik, adjusting the values as needed:
 
 ```properties
 labels:
@@ -57,8 +57,20 @@ labels:
   - "traefik.http.services.yourms.loadbalancer.healthcheck.timeout=2s"
 ```
 
-Nota: Cambia `yourms` por el nombre de tu servicio y ajusta el puerto y la ruta de healthcheck según tu configuración.
-Utiliza `retry@file` para habilitar reintentos en caso de fallos.
+Note: Replace `yourms` with your service name and adjust the port and health check path according to your configuration. Use `retry@file` to enable retries on failures.
 
-## Autor
-Bismarck Villca <bismarck.villca@gmail.com>
+## Author
+
+<div align="center">
+  <img src="https://github.com/villcabo.png" width="100" height="100" style="border-radius: 50%;" alt="villcabo">
+  <br/>
+  <strong>Bismarck Villca</strong>
+  <br/>
+  <a href="https://github.com/villcabo">
+    <img src="https://img.shields.io/badge/GitHub-villcabo-blue?style=flat-square&logo=github" alt="GitHub Profile">
+  </a>
+  <br/>
+  <a href="https://github.com/villcabo/traefik-docker">
+    <img src="https://img.shields.io/badge/Repository-traefik--docker-green?style=flat-square&logo=github" alt="Repository">
+  </a>
+</div>
